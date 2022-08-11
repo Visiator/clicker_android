@@ -2,6 +2,7 @@
 #include <X11/Xutil.h>
 #include <X11/Xos.h>
 #include <X11/Xatom.h>
+#include <X11/extensions/XTest.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -63,6 +64,13 @@ unsigned int avg(unsigned int v1, unsigned int v2, unsigned int v3, unsigned int
     return r | (g<<8) | (b<<16);
 }
 
+
+int nnn = 1;
+
+void fake_move(Display* display, Window win) {
+    XTestFakeMotionEvent(display, -1, 50, 50, CurrentTime);
+}
+
 void* thread_proc_get_scr(void *q) {
  
     Display     *d = XOpenDisplay(getenv("DISPLAY"));
@@ -80,6 +88,12 @@ void* thread_proc_get_scr(void *q) {
         if(w == 0) {
             w = find_window_android(0, d, DefaultRootWindow(d));        
         } else {
+            
+            if(nnn == 1) {
+                nnn = 0;
+                fake_move(d, w);
+            }
+            
             XGetWindowAttributes(d, w, &window_attr);
             
             if(window_attr.width/2 != android_screen_buffer.w || window_attr.height/2 != android_screen_buffer.h) {
@@ -148,6 +162,54 @@ void save_frame_press() {
     
 }
 
+char* getWindowName( Display* display, Window win ) {
+    Atom actualType;
+    int format;
+    ulong count, bytesAfter;
+    unsigned  char* name = NULL;
+    Status status = XGetWindowProperty(
+                        display,
+                        win,
+                        XInternAtom( display, "_NET_WM_NAME", False ),
+                        0L,
+                        ~0L,
+                        False,
+                        XInternAtom( display, "UTF8_STRING", False ),
+                        &actualType,
+                        &format,
+                        &count,
+                        &bytesAfter,
+                        &name
+                    );
+
+    if( status != Success ) {
+        return NULL;
+    }
+
+    if( name == NULL ) {
+        Status status = XGetWindowProperty(
+                            display,
+                            win,
+                            XInternAtom( display, "WM_NAME", False ),
+                            0L,
+                            ~0L,
+                            False,
+                            AnyPropertyType,
+                            &actualType,
+                            &format,
+                            &count,
+                            &bytesAfter,
+                            &name
+                        );
+
+        if( status != Success ) {
+            return NULL;
+        }
+    }
+
+    return reinterpret_cast< char* >( name );
+}
+
 unsigned int find_window_android(int lvl, Display *display, Window www) {
     
     int status;
@@ -162,6 +224,18 @@ unsigned int find_window_android(int lvl, Display *display, Window www) {
 
     for (int i = 0; i < nNumChildren; i++)
     {
+        
+        char* name  = getWindowName(display, children[i]);
+        if(name != nullptr) {
+            if(name[0] == 'E' && name[1] == 'M' && name[2] == 'U'  && name[3] == 'L') {
+                XFree(name);
+                r = children[i];
+                XFree((char*) children);
+                return r;
+            };
+        }
+        XFree(name);
+        
         XGetWindowAttributes(display, children[i], &window_attr);
         if(window_attr.width == 668 && window_attr.height == 1207) {
             r = children[i];
