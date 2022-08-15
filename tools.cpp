@@ -5,6 +5,11 @@
 
 #include <stdio.h>
 #include <string>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <stdlib.h>
+
+#include "tools.h"
 
 
 extern int memo_counter_;
@@ -121,19 +126,69 @@ bool file_exists(std::string &v) {
     return true;
 }
 
-std::string generate_new_filename_sprite() {
+std::string generate_new_dirname_sprite(int &idx) {
 
+    if(!directory_exists("sprites")) {
+        mkdir("sprites", 0777);
+        chmod("sprites", 0777);
+    } 
+    
     std::string s;
     int i;
     i = 0;
     do 
     {
         i++;
-        s = "sprite";
+        s = "sprites/sprite";
         s += std::to_string(i);
-        s += ".bmp";
+        //s += ".bmp";
         
-    } while(file_exists(s));
-    
+    } while(directory_exists(s.c_str()));
+    idx = i;
     return s;
+}
+
+bool directory_exists( const char* pzPath )
+{
+    if ( pzPath == NULL) return false;
+
+    DIR *pDir;
+    bool bExists = false;
+
+    pDir = opendir (pzPath);
+
+    if (pDir != NULL)
+    {
+        bExists = true;
+        (void) closedir (pDir);
+    }
+    
+    return bExists;
+}
+
+/*bool file_exists(std::string &v) {
+    FILE *f;
+    f = fopen(v.c_str(), "rb");
+    if(f == NULL) return false;
+    fclose(f);
+    return true;
+}*/
+
+void delete_file(char *filename) {
+    FILE *f;
+    f = fopen(filename, "rb");
+    if(f == NULL) return;
+    fclose(f);
+    remove(filename);
+}
+
+bool my_strcmp(char *v1, const char *v2) {
+    int i;
+    i = 0;
+    while(v1[i] != 0 && v2[i] != 0) {
+        if(v1[i] != v2[i]) return false;
+        i++;
+    }
+    if(v1[i] != v2[i]) return false;
+    return true;
 }

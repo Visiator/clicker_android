@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=SC
+PROJECTNAME=clicker_android
 
 # Active Configuration
 DEFAULTCONF=Debug

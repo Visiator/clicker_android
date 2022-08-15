@@ -3,7 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/cppFiles/file.cc to edit this template
  */
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
+
 #include "gui.h"
+#include "tools.h"
 
 extern FONTS fonts;
 
@@ -33,8 +38,34 @@ void RECTANGLE::paint(SCREEN &screen) {
     fonts.print(screen,x+ww, y+hh, "arial",12,label, label_color);
 }
 
-void GuiFRAME::save_BMP24(const std::string &file_name) {
+void GuiFRAME::save_BMP24(const std::string &dir_name) {
+
+    
+    if(!directory_exists("sprites")) {
+        mkdir("sprites", 0777);
+        chmod("sprites", 0777);
+    } 
+    if(!directory_exists(dir_name.c_str())) {
+        mkdir(dir_name.c_str(), 0777);
+        chmod(dir_name.c_str(), 0777);
+    } 
     FILE *f;
+    std::string file_name;
+    
+    file_name = dir_name + "/info.txt";
+    f = fopen(file_name.c_str(), "wb");
+    if(f != NULL) {
+        fprintf(f, "nic:%s\n", this->nic.c_str());
+        fprintf(f, "x:%d\n", this->x);
+        fprintf(f, "y:%d\n", this->y);
+        fprintf(f, "w:%d\n", this->w);
+        fprintf(f, "h:%d\n", this->h);
+        fclose(f);
+    }
+    
+    file_name = dir_name + "/img.bmp";
+    
+    
     f = fopen(file_name.c_str(), "wb");
     if(f != NULL) {
         save_textura_to_BMP_file_(f, store_buf, w, h);
@@ -44,6 +75,9 @@ void GuiFRAME::save_BMP24(const std::string &file_name) {
 
 
 void TEXTURA::save_textura_to_BMP_file(FILE *f) {
+    
+
+    
     save_textura_to_BMP_file_(f, bitmap, w, h);
 }
 
@@ -153,12 +187,56 @@ void load_textura_from_BMP_buffer(unsigned char *buf, unsigned int *&bitmap, uns
     
 }*/
         
-SPRITE::SPRITE(std::string file_name) : buf(nullptr), buf_size(0) {
-    unsigned char *b;
-    int i,j;
+SPRITE::SPRITE(std::string dir_name) : buf(nullptr), is_detected(false) {
+    unsigned char *b, s1[100], s2[100];
+    int i,j, k;
     unsigned int ww, hh;
-    b = new unsigned char[100000];
     FILE *f;
+    std::string file_name;
+
+    file_name = dir_name + "/info.txt";
+    
+    f = fopen(file_name.c_str(), "rb");
+    if(f != NULL) {
+        i = fgetc(f);
+        j = 0;
+        k = 0;
+        s1[0] = 0;
+        s2[0] = 0;
+        while(i != EOF) {
+            if(i == '\n') {
+                if(my_strcmp((char *)s1, "nic")) {
+                    set_nic((char *)s2);
+                }
+                if(my_strcmp((char *)s1, "x")) {
+                    set_x((char *)s2);
+                }
+                if(my_strcmp((char *)s1, "y")) {
+                    set_y((char *)s2);
+                }
+                k = 0;
+                j = 0;
+                s1[0] = 0;
+                s2[0] = 0;
+            } else {
+                if(i == ':') {
+                    k++;
+                    j=0;
+                } else {
+                    if(k==0) s1[j] = i; else s2[j] = i;
+                    if(j < 100-2) j++;
+                    if(k==0) s1[j] = 0; else s2[j] = 0;
+                }
+            }
+            i = fgetc(f);    
+        }
+        fclose(f);
+    }
+    
+    file_name = dir_name + "/img.bmp";
+    
+    b = new unsigned char[100000];
+    
     f = fopen(file_name.c_str(), "rb");
     if(f != NULL) {
         
@@ -176,16 +254,16 @@ void SPRITE_LIST::load() {
     std::string s;
     int i;
     i = 1;
-    s = "sprite";
+    s = "sprites/sprite";
     s += std::to_string(i);
-    s += ".bmp";
-    while(file_exists(s))
+    //s += ".bmp";
+    while(directory_exists(s.c_str()))
     {
         list.push_back(std::move(s));
         i++;
-        s = "sprite";
+        s = "sprites/sprite";
         s += std::to_string(i);
-        s += ".bmp";
+        //s += ".bmp";
     }
 }
 
@@ -200,6 +278,13 @@ void SPRITE::paint(SCREEN &screen, int xx, int yy, int ww, int hh) {
             *q++ = *qq++;
         }
     }
+    if(this->is_detected) {
+        screen.rectangle(detect_x, detect_y, w, h, 0xff00ff);
+        screen.rectangle(xx, yy, w, h, 0xff00ff);
+        
+    };
+    std::string s = std::to_string(x) + ":" + std::to_string(y)+ " [" + nic + "]";
+    fonts.print(screen,xx + w + 5, yy, "arial",10, s, 0);
 }
 
 void SPRITE_LIST::paint(SCREEN &screen) {

@@ -35,9 +35,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/d4fceca8/font.o \
-	${OBJECTDIR}/_ext/d4fceca8/gui.o \
-	${OBJECTDIR}/_ext/d4fceca8/tools.o \
+	${OBJECTDIR}/_ext/67dd150d/font.o \
+	${OBJECTDIR}/_ext/67dd150d/gui.o \
+	${OBJECTDIR}/_ext/67dd150d/tools.o \
 	${OBJECTDIR}/main.o
 
 
@@ -59,26 +59,26 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sc
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/clicker_android
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sc: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/clicker_android: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sc ${OBJECTFILES} ${LDLIBSOPTIONS} -lX11
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/clicker_android ${OBJECTFILES} ${LDLIBSOPTIONS} -lX11 -lXtst
 
-${OBJECTDIR}/_ext/d4fceca8/font.o: /home/smorodin/NetBeansProjects/SC/font.cpp
-	${MKDIR} -p ${OBJECTDIR}/_ext/d4fceca8
+${OBJECTDIR}/_ext/67dd150d/font.o: /home/smorodin/NetBeansProjects/clicker_android/font.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/67dd150d
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d4fceca8/font.o /home/smorodin/NetBeansProjects/SC/font.cpp
+	$(COMPILE.cc) -g -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/67dd150d/font.o /home/smorodin/NetBeansProjects/clicker_android/font.cpp
 
-${OBJECTDIR}/_ext/d4fceca8/gui.o: /home/smorodin/NetBeansProjects/SC/gui.cpp
-	${MKDIR} -p ${OBJECTDIR}/_ext/d4fceca8
+${OBJECTDIR}/_ext/67dd150d/gui.o: /home/smorodin/NetBeansProjects/clicker_android/gui.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/67dd150d
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d4fceca8/gui.o /home/smorodin/NetBeansProjects/SC/gui.cpp
+	$(COMPILE.cc) -g -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/67dd150d/gui.o /home/smorodin/NetBeansProjects/clicker_android/gui.cpp
 
-${OBJECTDIR}/_ext/d4fceca8/tools.o: /home/smorodin/NetBeansProjects/SC/tools.cpp
-	${MKDIR} -p ${OBJECTDIR}/_ext/d4fceca8
+${OBJECTDIR}/_ext/67dd150d/tools.o: /home/smorodin/NetBeansProjects/clicker_android/tools.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/67dd150d
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d4fceca8/tools.o /home/smorodin/NetBeansProjects/SC/tools.cpp
+	$(COMPILE.cc) -g -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/67dd150d/tools.o /home/smorodin/NetBeansProjects/clicker_android/tools.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}

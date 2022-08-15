@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux
-CND_ARTIFACT_NAME_Debug=sc
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux/sc
+CND_ARTIFACT_NAME_Debug=clicker_android
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux/clicker_android
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux/package
-CND_PACKAGE_NAME_Debug=sc.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/sc.tar
+CND_PACKAGE_NAME_Debug=clickerandroid.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/clickerandroid.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux
-CND_ARTIFACT_NAME_Release=sc
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/sc
+CND_ARTIFACT_NAME_Release=clicker_android
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/clicker_android
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux/package
-CND_PACKAGE_NAME_Release=sc.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/sc.tar
+CND_PACKAGE_NAME_Release=clickerandroid.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/clickerandroid.tar
 #
 # include compiler specific variables
 #

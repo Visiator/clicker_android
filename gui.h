@@ -13,6 +13,7 @@
 #ifndef GUI_H
 #define GUI_H
 
+#include <mutex>
 #include "font.h"
 
 class SCREEN {
@@ -20,6 +21,7 @@ public:
        
     unsigned int *buffer;
     unsigned int w, h;
+    
     void line_h(unsigned int x, unsigned int y, unsigned int ww, unsigned int color) {
         if(x+ww >= w ) return;
         if(y >= h ) return;
@@ -36,6 +38,12 @@ public:
             *q = color;
             q += w;
         };
+    }
+    void rectangle(unsigned int x, unsigned int y, unsigned int ww, unsigned int hh, unsigned int color) {
+        line_h(x, y, ww, color);
+        line_h(x, y+hh-1, ww, color);
+        line_v(x, y, hh, color);
+        line_v(x+ww-1, y, hh, color);
     }
     void set_size(unsigned int w_, unsigned int h_) {
         if(w_ == w && h_ == h) return;
@@ -153,6 +161,7 @@ class GuiFRAME : public RECTANGLE {
 public:
     int store_buf_size;
     unsigned int *store_buf;
+    std::string nic;
     
     void save_BMP24(const std::string &s);
     
@@ -269,9 +278,20 @@ public:
 
 class SPRITE : public RECTANGLE {
 public:
+    bool is_detected;
+    int detect_x, detect_y;
     unsigned int *buf;
-    unsigned int buf_size;
-    
+    std::string nic;
+    //unsigned int buf_size;
+    void set_nic(char *v) {
+        nic = v;
+    }
+    void set_x(char *x_) {
+        x = std::atoi(x_);
+    }
+    void set_y(char *y_) {
+        y = std::atoi(y_);
+    }
     SPRITE& operator=(const SPRITE& src) {
         if (this != &src) {
             
@@ -279,39 +299,47 @@ public:
         return *this;
     }
     void paint(SCREEN &screen, int x, int y, int w, int h);
+    bool find(SCREEN& sb);
+    bool find_direct(SCREEN& sb);
     SPRITE& operator=(SPRITE&& src) {
         if(this->buf != nullptr) delete[] buf;
         this->buf = src.buf;
-        this->buf_size = src.buf_size;
         w = src.w;
         h = src.h;
+        x = src.x;
+        y = src.y;
+        nic = src.nic;
         src.buf = nullptr;
-        src.buf_size = 0;
+        src.nic = "";
         
         
         
         return *this;
-    }
-    
-    SPRITE(const SPRITE& src) noexcept : buf(nullptr), buf_size(0) {
+    }    
+    SPRITE(const SPRITE& src) noexcept : buf(nullptr), is_detected(false) {
                 
     }
-    SPRITE(SPRITE&& src) noexcept : buf(nullptr), buf_size(0) {
+    SPRITE(SPRITE&& src) noexcept : buf(nullptr), is_detected(false) {
         *this = std::move(src);
     }
-    SPRITE(std::string file_name);
+    SPRITE(std::string dir_name);
     
     ~SPRITE() {
         if(buf != nullptr) { delete[] buf; buf = nullptr; };
-        buf_size = 0;
+        
     }
 };
 
 class SPRITE_LIST : public RECTANGLE {
 public:
     std::vector<SPRITE> list;
-    void paint(SCREEN &screen);
+    std::mutex mmutex;
+    
+    void paint(SCREEN& screen);
     void load();
+
+    bool find(SCREEN& sb);
+    bool find_direct(SCREEN& sb);
     
     SPRITE_LIST() {
         

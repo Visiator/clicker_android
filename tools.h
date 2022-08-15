@@ -20,7 +20,12 @@ void memo_counter(int val);
 bool my_strcmp(char *v1, char *v2);
 void save_textura_to_BMP_file_(FILE *f, unsigned int *bitmap, int w, int h);
 bool file_exists(std::string &v);
-std::string generate_new_filename_sprite();
+std::string generate_new_dirname_sprite(int &idx);
+bool directory_exists( const char* pzPath );
+bool file_exists(std::string &v);
+void delete_file(char *filename);
+bool my_strcmp(char *v1, const char *v2);
+
 
 #endif /* TOOLS_H */
 
